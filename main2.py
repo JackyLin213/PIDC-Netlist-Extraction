@@ -1,4 +1,6 @@
 import re
+import matplotlib.pyplot as plt
+import networkx as nx
 
 def find_shared_nodes(file_path):
     """
@@ -43,7 +45,7 @@ def find_shared_nodes(file_path):
                     node_to_net_map[word].append(net_name)
                     break
 
-    # 處理節點屬於多個 NET_NAME 的情況                                                                                                
+    # 處理節點屬於多個 NET_NAME 的情況
     for node, nets in node_to_net_map.items():
         if node.startswith(("R")) and len(nets) > 1:  # 針對 R 開頭的節點，只有當它屬於多個 NET_NAME 才加入 shared_nodes
             unique_nets = list(set(nets))
@@ -62,10 +64,28 @@ def find_shared_nodes(file_path):
 
     return shared_nodes  # 返回 list
 
+def draw_tree(data):
+    """
+    使用樹狀圖呈現資料
+
+    Args:
+        data (list): 每筆資料的 list，例如 ["NET_NAME1", "NET_NAME2", "NODE_NAME"]
+    """
+    graph = nx.DiGraph()
+    graph.add_edges_from([(data[i], data[-1]) for i in range(len(data) - 1)])
+    
+    # 設定圖形樣式
+    pos = nx.spring_layout(graph, seed=42)  # 使用 spring_layout 排版
+    plt.figure(figsize=(8, 6))
+    nx.draw(graph, pos, with_labels=True, node_size=1500, node_color="skyblue", font_size=10, 
+            font_color="black", font_weight="bold", arrowsize=20, arrowstyle='->')
+    plt.title("樹狀圖呈現")
+    plt.show()
+
 # 測試
-file_path = "test.txt"  # 替換為您的文件路徑
+file_path = "test2.txt"  # 替換為您的文件路徑
 result = find_shared_nodes(file_path)
 
-# 輸出 list
+# 逐筆繪製樹狀圖
 for item in result:
-    print(item)
+    draw_tree(item)
