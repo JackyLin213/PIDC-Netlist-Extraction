@@ -52,4 +52,4 @@ def find_shared_nodes(file_path):
 # 測試
 file_path = "test.txt"  # 替換為您的文件路徑
 result = find_shared_nodes(file_path)
-print(result)
+print(result):
